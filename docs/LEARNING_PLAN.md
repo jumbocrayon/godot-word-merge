@@ -47,7 +47,10 @@ scenes as prefabs [Godot].
 **Goal:** open the Word Merge project, build the level screen skeleton, run it.
 
 1. Create a new scene with a **`Control`** root named `Level`. Save as
-   `level.tscn`. Press <kbd>F5</kbd> and set it as the main scene when asked.
+   `scenes/level.tscn` (create the `scenes/` folder — this project keeps
+   scenes in `scenes/`, scripts in `scripts/`, and images in
+   `assets/images/`). Press <kbd>F5</kbd> and set it as the main scene when
+   asked.
 2. Build this node tree using containers (drag nodes from **Add Child Node**):
    ```
    Level (Control, anchors = Full Rect)
@@ -61,10 +64,11 @@ scenes as prefabs [Godot].
            ├── Rack (HFlowContainer)        ← word tiles go here later
            └── SubmitButton (Button)  "Submit"
    ```
-3. Drop any image into the folder (steal `icon.webp` for now), and assign it to
-   `Picture.texture` in the Inspector. Set its **Expand Mode** and **Stretch
+3. Drop any image into `assets/images/` (any picture you like works for now),
+   and assign it to `Picture.texture` in the Inspector. Set its **Expand Mode** and **Stretch
    Mode** so it scales instead of overflowing — experiment.
-4. Attach a script to `Level` (`level.gd`). In `_ready()`, print something.
+4. Attach a script to `Level`, saved as `scripts/level.gd`. In `_ready()`,
+   print something.
    Connect `SubmitButton`'s `pressed` **signal** to the script via the **Node
    dock → Signals tab**, and print "submitted!" in the handler.
 5. Resize the game window while it runs. Containers reflow everything — this is
@@ -83,10 +87,11 @@ the Output panel; resizing the window doesn't break the layout.
 
 **Goal:** a `WordTile` scene you can stamp out with any word on it.
 
-1. New scene: root **`Button`** named `WordTile`, save as `word_tile.tscn`.
+1. New scene: root **`Button`** named `WordTile`, save as
+   `scenes/word_tile.tscn`.
    Give it a minimum size (Inspector → Layout → Custom Minimum Size) so tiles
    are finger-sized.
-2. Attach `word_tile.gd`:
+2. Attach `scripts/word_tile.gd`:
    ```gdscript
    extends Button
 
@@ -99,7 +104,7 @@ the Output panel; resizing the window doesn't break the layout.
    display in sync.)
 3. In `level.gd`, load the scene and spawn the starting rack:
    ```gdscript
-   const WORD_TILE = preload("res://word_tile.tscn")
+   const WORD_TILE = preload("res://scenes/word_tile.tscn")
 
    func _ready() -> void:
        for w in ["sun", "flower", "dog", "sleepy", "the", "in", "a", "field"]:
@@ -163,7 +168,7 @@ dragging "dog" onto "flower" flashes red and does nothing.
 
 **Goal:** six slots under the image; filling them correctly wins the level.
 
-1. New tiny scene `caption_slot.tscn`: root **`PanelContainer`** named
+1. New tiny scene `scenes/caption_slot.tscn`: root **`PanelContainer`** named
    `CaptionSlot` with a dashed/empty look. Spawn 6 of them into `CaptionRow`
    from `level.gd` (same instancing pattern as tiles).
 2. Give slots `_can_drop_data()`/`_drop_data()` too: accept a `WordTile` only
@@ -191,7 +196,7 @@ overlays [Godot] · win conditions & game state [GameDev] · enums for state
 
 **Goal:** levels defined as data files; the code becomes a generic player.
 
-1. Create `level_data.gd`:
+1. Create `scripts/level_data.gd`:
    ```gdscript
    class_name LevelData
    extends Resource
@@ -222,7 +227,8 @@ and one image.
 
 **Goal:** the economy layer, plus persistence.
 
-1. Create an **autoload** (Project Settings → Globals): `game_state.gd` with
+1. Create an **autoload** (Project Settings → Globals): `scripts/game_state.gd`
+   with
    `var coins: int` and a `signal coins_changed(total: int)`. Autoloads are
    Godot's singletons — right for the tiny bit of state that outlives a level,
    and *only* that. Resist putting level logic in it.

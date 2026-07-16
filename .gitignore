@@ -1,0 +1,8 @@
+# Godot 4 import cache and editor state — regenerated locally, never commit.
+.godot/
+
+# Old-style export config
+export_presets.cfg.bak
+
+# macOS
+.DS_Store
